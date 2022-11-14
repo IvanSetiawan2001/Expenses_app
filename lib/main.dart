@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/TxCard.dart';
 import './transaction.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
-  final List<Transaction> transaction = [
+  final List<Transaction> transactions = [
     Transaction(
       id: 't1',
       title: 'New Shoes',
@@ -50,10 +51,9 @@ class MyHomePage extends StatelessWidget {
               ),
               elevation: 5,
             ),
-            Card(
-              color: Colors.red,
-              child: Text('LIST OF TX'),
-            ),
+            TxCard(
+              transactions: transactions,
+            )
           ],
         ));
   }
