@@ -32,6 +32,9 @@ class MyHomePage extends StatelessWidget {
     ),
   ];
 
+  String? titleInput;
+  String? amountInput;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,17 +42,41 @@ class MyHomePage extends StatelessWidget {
           title: Text('Flutter App'),
         ),
         body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Card(
-              color: Colors.blue,
-              child: Container(
+            Container(
+              width: double.infinity,
+              child: Card(
+                color: Colors.blue,
                 child: Text('CHART!'),
-                width: double.infinity,
-                height: 50,
+                elevation: 5,
               ),
-              elevation: 5,
+            ),
+            Card(
+              child: Container(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(labelText: 'Title'),
+                      onChanged: (value) => titleInput = value,
+                    ),
+                    TextField(
+                      decoration: InputDecoration(labelText: 'Amount'),
+                      onChanged: (value) => amountInput = value,
+                    ),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text('Add Transaction'),
+                      style: ButtonStyle(
+                        foregroundColor:
+                            MaterialStateProperty.all(Colors.purple),
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
             TxCard(
               transactions: transactions,

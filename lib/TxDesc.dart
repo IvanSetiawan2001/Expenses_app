@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TxDesc extends StatelessWidget {
   final String? title;
@@ -19,7 +20,7 @@ class TxDesc extends StatelessWidget {
           ),
         ),
         Text(
-          date!.toString(),
+          DateFormat('dd-MMMM-yyyy').format(date!),
           style: TextStyle(color: Colors.grey),
         ),
       ],
