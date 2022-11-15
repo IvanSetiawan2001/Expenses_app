@@ -17,7 +17,7 @@ class Price extends StatelessWidget {
         style: BorderStyle.solid,
       )),
       child: Text(
-        '\$' + amount.toString(),
+        '\$' + amount!.toStringAsFixed(2),
         // '\$ ${amount.toString()}' (this is another way to call the amount $ mean interpolaring some value so you can call the variable inside a string)
         style: TextStyle(
           color: Colors.purple,
