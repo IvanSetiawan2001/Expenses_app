@@ -12,13 +12,7 @@ class TxDesc extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title!,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        Text(title!, style: Theme.of(context).textTheme.headline6),
         Text(
           DateFormat('dd-MMMM-yyyy').format(date!),
           style: TextStyle(color: Colors.grey),
