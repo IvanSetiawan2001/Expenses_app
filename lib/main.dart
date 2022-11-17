@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/Widgets/chart.dart';
 import 'package:flutter_complete_guide/Widgets/transaction_list.dart';
 import '../Widgets/new_transaction.dart';
 import '../Widgets/transaction_list.dart';
@@ -54,19 +55,29 @@ class _MyHomePageState extends State<MyHomePage> {
   final amountController = TextEditingController();
 
   final List<Transaction> _userTransaction = [
-    Transaction(
-      id: 't1',
-      title: 'New Shoes',
-      amount: 69.99,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't2',
-      title: 'Weekly Groceries',
-      amount: 69.99,
-      date: DateTime.now(),
-    ),
+    // Transaction(
+    //   id: 't1',
+    //   title: 'New Shoes',
+    //   amount: 69.99,
+    //   date: DateTime.now(),
+    // ),
+    // Transaction(
+    //   id: 't2',
+    //   title: 'Weekly Groceries',
+    //   amount: 69.99,
+    //   date: DateTime.now(),
+    // ),
   ];
+
+  List<Transaction> get _recentTransaction {
+    return _userTransaction
+        .where(
+          (element) => element.date!.isAfter(
+            DateTime.now().subtract(Duration(days: 7)),
+          ),
+        )
+        .toList();
+  }
 
   void _addNewTransaction(String TxTitle, double TxAmount) {
     final newTx = Transaction(
@@ -109,14 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text('CHART!'),
-                elevation: 5,
-              ),
-            ),
+            Chart(_recentTransaction),
             TransactionList(_userTransaction)
           ],
         ),
