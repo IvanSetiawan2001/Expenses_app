@@ -41,27 +41,30 @@ class Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(groupedTransactionValues);
-    return Card(
-      elevation: 6,
-      margin: EdgeInsets.all(20),
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: groupedTransactionValues.map((data) {
-            return Flexible(
-              flex: 1,
-              //flex is indicate the portion a component will get, for example if one is 1 and the other is 2, the 2nd will get twice the space of the first one
-              fit: FlexFit.tight,
-              child: ChartBar(
-                label: (data['day'] as String),
-                spendingAmount: (data['amount'] as double),
-                spendingPcOfTotal: totalSpending == 0.0
-                    ? 0.0
-                    : (data['amount'] as double) / totalSpending,
-              ),
-            );
-          }).toList(),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.4,
+      child: Card(
+        elevation: 6,
+        margin: EdgeInsets.all(20),
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: groupedTransactionValues.map((data) {
+              return Flexible(
+                flex: 1,
+                //flex is indicate the portion a component will get, for example if one is 1 and the other is 2, the 2nd will get twice the space of the first one
+                fit: FlexFit.tight,
+                child: ChartBar(
+                  label: (data['day'] as String),
+                  spendingAmount: (data['amount'] as double),
+                  spendingPcOfTotal: totalSpending == 0.0
+                      ? 0.0
+                      : (data['amount'] as double) / totalSpending,
+                ),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );
