@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class NewTransaction extends StatefulWidget {
   final Function addNewTransaction;
@@ -10,49 +12,108 @@ class NewTransaction extends StatefulWidget {
 }
 
 class _NewTransactionState extends State<NewTransaction> {
-  final titleController = TextEditingController();
+  final _titleController = TextEditingController();
 
-  final amountController = TextEditingController();
+  final _amountController = TextEditingController();
+  final _dateController = TextEditingController();
+  DateTime? _selectDate;
 
-  void submitData() {
-    final enteredTitle = titleController.text;
-    final enteredAmount = double.parse(amountController.text);
+  void _submitData() {
+    final enteredTitle = _titleController.text;
+    final enteredAmount = double.parse(_amountController.text);
 
-    if (enteredTitle.isEmpty || enteredAmount <= 0) {
+    if (enteredTitle.isEmpty || enteredAmount <= 0 || _selectDate == null) {
       return;
     }
 
-    widget.addNewTransaction(
-        titleController.text, double.parse(amountController.text));
+    widget.addNewTransaction(_titleController.text,
+        double.parse(_amountController.text), _selectDate);
 
     Navigator.of(context).pop();
+  }
+
+  void _presentDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2018),
+      lastDate: DateTime.now(),
+    ).then((value) {
+      if (value == null) {
+        return;
+      }
+
+      setState(() {
+        _selectDate = value;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Container(
+        height: 400,
+        width: double.infinity,
         padding: EdgeInsets.all(10),
         child: Column(
           children: [
             TextField(
-              controller: titleController,
+              controller: _titleController,
               decoration: InputDecoration(labelText: 'Title'),
-              onSubmitted: (_) => submitData(),
+              onSubmitted: (_) => _submitData(),
             ),
             TextField(
-              controller: amountController,
+              controller: _amountController,
               keyboardType: TextInputType.number,
               decoration: InputDecoration(labelText: 'Amount'),
-              onSubmitted: (_) => submitData(),
+              onSubmitted: (_) => _submitData(),
             ),
-            TextButton(
-              onPressed: () {
-                submitData();
-              },
-              child: Text('Add Transaction'),
-              style: ButtonStyle(
-                foregroundColor: MaterialStateProperty.all(Colors.purple),
+            Row(
+              children: [
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: TextField(
+                    enabled: false,
+                    decoration: InputDecoration(
+                        labelStyle: _selectDate == null
+                            ? TextStyle()
+                            : TextStyle(color: Colors.black),
+                        labelText: _selectDate == null
+                            ? 'No Date Chosen!'
+                            : DateFormat.yMMMMd().format(_selectDate!)),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: TextButton(
+                    onPressed: () {
+                      _presentDatePicker();
+                    },
+                    child: Text(
+                      'Choose Date',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.all(
+                          Theme.of(context).primaryColor),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 20),
+              child: ElevatedButton(
+                onPressed: () {
+                  _submitData();
+                },
+                child: Text('Add Transaction'),
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.purple),
+                ),
               ),
             )
           ],
