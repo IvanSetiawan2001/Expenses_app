@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -90,21 +93,33 @@ class _NewTransactionState extends State<NewTransaction> {
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 20),
-                    child: TextButton(
-                      onPressed: () {
-                        _presentDatePicker();
-                      },
-                      child: Text(
-                        'Choose Date',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      style: ButtonStyle(
-                        foregroundColor: MaterialStateProperty.all(
-                            Theme.of(context).primaryColor),
-                      ),
-                    ),
+                    child: Platform.isIOS
+                        ? CupertinoButton(
+                            onPressed: () {
+                              _presentDatePicker();
+                            },
+                            child: Text(
+                              'Choose Date',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )
+                        : TextButton(
+                            onPressed: () {
+                              _presentDatePicker();
+                            },
+                            child: Text(
+                              'Choose Date',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            style: ButtonStyle(
+                              foregroundColor: MaterialStateProperty.all(
+                                  Theme.of(context).primaryColor),
+                            ),
+                          ),
                   ),
                 ],
               ),

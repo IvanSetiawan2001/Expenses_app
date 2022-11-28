@@ -1,5 +1,6 @@
-import 'dart:js';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/Widgets/chart.dart';
@@ -123,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final IOS = Platform.isIOS;
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
     final appBar = AppBar(
@@ -134,6 +136,22 @@ class _MyHomePageState extends State<MyHomePage> {
         )
       ],
     );
+    final cupertinoAppbar = CupertinoNavigationBar(
+      middle: Text('Personal Expenses'),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            onTap: () => _startAddNewTransaction(context),
+            child: Icon(CupertinoIcons.add),
+          )
+        ],
+      ),
+    );
+
+    final appbarSize = IOS
+        ? appBar.preferredSize.height
+        : cupertinoAppbar.preferredSize.height;
 
     final txListWidget = Container(
         height: (mediaQuery.size.height -
@@ -142,9 +160,8 @@ class _MyHomePageState extends State<MyHomePage> {
             0.7,
         child: TransactionList(_userTransaction, _deleteTransaction));
 
-    return Scaffold(
-      appBar: appBar,
-      body: SingleChildScrollView(
+    final pageBody = SafeArea(
+      child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -153,8 +170,12 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Show Cart'),
-                  Switch(
+                  Text(
+                    'Show Cart',
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  Switch.adaptive(
+                    activeColor: Theme.of(context).colorScheme.secondary,
                     value: _showChart,
                     onChanged: (val) {
                       setState(() {
@@ -167,7 +188,7 @@ class _MyHomePageState extends State<MyHomePage> {
             if (!isLandscape)
               Container(
                   height: (mediaQuery.size.height -
-                          appBar.preferredSize.height -
+                          appbarSize -
                           mediaQuery.padding.top) *
                       0.3,
                   child: Chart(_recentTransaction)),
@@ -176,7 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
               _showChart
                   ? Container(
                       height: (mediaQuery.size.height -
-                              appBar.preferredSize.height -
+                              appbarSize -
                               mediaQuery.padding.top) *
                           0.7,
                       child: Chart(_recentTransaction))
@@ -184,12 +205,26 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        foregroundColor: Colors.black,
-        onPressed: () => _startAddNewTransaction(context),
-      ),
     );
+
+    return Platform.isIOS
+        ? CupertinoPageScaffold(
+            child: pageBody,
+            navigationBar: cupertinoAppbar,
+          )
+        : Scaffold(
+            //scaffold using material design wich is a android design.
+            appBar: appBar,
+            body: pageBody,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: Platform.isIOS
+                ? Container()
+                : FloatingActionButton(
+                    child: Icon(Icons.add),
+                    foregroundColor: Colors.black,
+                    onPressed: () => _startAddNewTransaction(context),
+                  ),
+          );
   }
 }
